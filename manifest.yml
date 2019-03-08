@@ -1,0 +1,10 @@
+---
+applications:
+- name: order-service
+  path: build/libs/orderService-0.0.1-SNAPSHOT.jar
+  routes:
+  - route: orders-service.cfapps.io
+  services:
+  - orders_db
+  - orderService-circuit-breaker
+ 

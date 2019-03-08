@@ -16,7 +16,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 @Service
 public class ProductServiceProxy {
 
-	final String URI = "http://localhost:8001/api/products";
+	final String URI = "https://product-service-nttdata.cfapps.io/api/products";
 
 	@Autowired
 	private RestTemplate restTemplate;

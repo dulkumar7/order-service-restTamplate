@@ -7,7 +7,7 @@ import com.anirudhbhatnagar.orderService.dto.request.CustomerOrderRequest;
 import com.anirudhbhatnagar.orderService.repository.OrderRepository;
 import com.anirudhbhatnagar.orderService.restClient.ProductServiceProxy;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api/orders")
 public class OrderController {
 
 	@Autowired
+
 	private OrderRepository orderRepository;
 	@Autowired
 	private ProductServiceProxy productServiceProxy;
@@ -32,14 +34,15 @@ public class OrderController {
 	 * ProductServiceProxy productServiceProxy) { this.orderRepository =
 	 * orderRepository; this.productServiceProxy = productServiceProxy; }
 	 */
-	@GetMapping("/orders")
+	@GetMapping // ("/orders")
 	public List<CustomerOrderDetails> getCustomerOrders(@RequestParam String customerId) {
 		final List<Order> order = orderRepository.findByCustomerId(customerId);
 		return order.stream().map(o -> toCustomerOrderDetails(o)).collect(Collectors.toList());
 	}
 
-	@GetMapping("/orders/{id}")
-	//@HystrixCommand(commandKey = "orderDetails",fallbackMethod = "getDefaultProductInventoryByCode")
+	@GetMapping("/{id}")
+	// @HystrixCommand(commandKey = "orderDetails",fallbackMethod =
+	// "getDefaultProductInventoryByCode")
 	public CustomerOrderDetails getOrders(@PathVariable("id") Long orderId) {
 		final Order order = orderRepository.findById(orderId).orElse(null);
 		if (order == null) {
@@ -49,14 +52,17 @@ public class OrderController {
 	}
 
 	// fallback method of getOrders
-	/*public CustomerOrderDetails fallbackGetOrders(Long orderId) {
-
-		CustomerOrderDetails orderDetails = CustomerOrderDetails.builder().orderId(0L)
-				.externalReference("not available").items(null).build();
-
-		return orderDetails;
-
-	}*/
+	/*
+	 * public CustomerOrderDetails fallbackGetOrders(Long orderId) {
+	 * 
+	 * CustomerOrderDetails orderDetails =
+	 * CustomerOrderDetails.builder().orderId(0L)
+	 * .externalReference("not available").items(null).build();
+	 * 
+	 * return orderDetails;
+	 * 
+	 * }
+	 */
 
 	private CustomerOrderDetails toCustomerOrderDetails(Order order) {
 		return CustomerOrderDetails.builder().orderId(order.getId()).createdDate(order.getCreatedDate())
@@ -72,7 +78,7 @@ public class OrderController {
 				.product(productServiceProxy.getProduct(item.getProductId())).build();
 	}
 
-	@PostMapping("/orders")
+	@PostMapping // ("/orders")
 	public Order save(@RequestBody CustomerOrderRequest request) {
 		return orderRepository.save(
 				Order.builder().customerId(request.getCustomerId()).externalReference(request.getExternalReference())
