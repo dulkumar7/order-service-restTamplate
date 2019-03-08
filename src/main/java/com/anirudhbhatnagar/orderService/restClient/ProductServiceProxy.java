@@ -21,10 +21,6 @@ public class ProductServiceProxy {
 	private RestTemplate restTemplate;
 
 	public Product getProduct(Long id) {
-		/*
-		 * ResponseEntity<Product> response = restTemplate.getForEntity(URI +
-		 * "/"+Long.toString(id), Product.class); return response.getBody();
-		 */
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-", "application/json;Charset-UTF-8");

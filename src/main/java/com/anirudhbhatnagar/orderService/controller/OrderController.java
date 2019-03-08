@@ -40,7 +40,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{id}")
-    @HystrixCommand(fallbackMethod = "fallbackGetOrders")
+    //@HystrixCommand(fallbackMethod = "fallbackGetOrders")
     public CustomerOrderDetails getOrders(@PathVariable("id") Long orderId) {
         final Order order = orderRepository.findById(orderId).orElse(null);
         if (order == null) {
